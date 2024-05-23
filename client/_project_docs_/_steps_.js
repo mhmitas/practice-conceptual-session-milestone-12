@@ -18,8 +18,8 @@
 
 ~ now i will work with add room form :
     1. i will show the date-range calender 
-    2. then upload room image to the imgBB and show img preview
     3. collect all data from the form and add host data and take data from the date-range
+    2. then upload room image to the imgBB and show img preview
     4. create a post request to the server and at the same time create and api to save data to the database.
 
 

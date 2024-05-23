@@ -1,11 +1,24 @@
 import { categories } from '../../Categories/CategoriesData'
+import { useState } from 'react'
+import { DateRange } from "react-date-range";
+import { useForm } from "react-hook-form";
 
-const AddRoomForm = () => {
 
+const AddRoomForm = ({ setDates, dates, handleFormSubmit }) => {
+    const { register, handleSubmit } = useForm()
+    const [imagePreview, setImagePreview] = useState()
+    function handleImagePreview(file) {
+        console.log(file);
+        // const imageUrl = URL.createObjectURL(file)
+    }
+
+    function consoleLog(e) {
+        console.log(e.target);
+    }
 
     return (
         <div className='w-full min-h-[calc(100vh-40px)] flex flex-col justify-center items-center text-gray-800 rounded-xl bg-gray-50'>
-            <form>
+            <form onSubmit={handleSubmit(handleFormSubmit)}>
                 <div className='grid grid-cols-1 lg:grid-cols-2 gap-10 py-6'>
                     <div className='space-y-6'>
                         <div className='space-y-1 text-sm'>
@@ -17,6 +30,7 @@ const AddRoomForm = () => {
                                 name='location'
                                 id='location'
                                 type='text'
+                                {...register('location')}
                                 placeholder='Location'
                                 required
                             />
@@ -30,6 +44,7 @@ const AddRoomForm = () => {
                                 required
                                 className='w-full px-4 py-3 border-rose-300 focus:outline-rose-500 rounded-md'
                                 name='category'
+                                {...register('category')}
                             >
                                 {categories.map(category => (
                                     <option value={category.label} key={category.label}>
@@ -44,6 +59,13 @@ const AddRoomForm = () => {
                                 Select Availability Range
                             </label>
                             {/* Calender */}
+                            <DateRange
+                                rangeColors={['#38c953']}
+                                editableDateInputs={true}
+                                onChange={item => setDates([item.selection])}
+                                moveRangeOnFirstSelection={false}
+                                ranges={dates}
+                            />
 
                         </div>
                     </div>
@@ -57,6 +79,7 @@ const AddRoomForm = () => {
                                 name='title'
                                 id='title'
                                 type='text'
+                                {...register('title')}
                                 placeholder='Title'
                                 required
                             />
@@ -67,8 +90,10 @@ const AddRoomForm = () => {
                                 <div className='flex flex-col w-max mx-auto text-center'>
                                     <label>
                                         <input
+                                            onChange={(e) => handleImagePreview(e.target.files[0])}
                                             className='text-sm cursor-pointer w-36 hidden'
                                             type='file'
+                                            {...register('image')}
                                             name='image'
                                             id='image'
                                             accept='image/*'
@@ -92,6 +117,7 @@ const AddRoomForm = () => {
                                     name='price'
                                     id='price'
                                     type='number'
+                                    {...register('price')}
                                     placeholder='Price'
                                     required
                                 />
@@ -106,6 +132,7 @@ const AddRoomForm = () => {
                                     name='total_guest'
                                     id='guest'
                                     type='number'
+                                    {...register('total_guest')}
                                     placeholder='Total guest'
                                     required
                                 />
@@ -122,6 +149,7 @@ const AddRoomForm = () => {
                                     name='bedrooms'
                                     id='bedrooms'
                                     type='number'
+                                    {...register('bedrooms')}
                                     placeholder='Bedrooms'
                                     required
                                 />
@@ -136,6 +164,7 @@ const AddRoomForm = () => {
                                     name='bathrooms'
                                     id='bathrooms'
                                     type='number'
+                                    {...register('bathrooms')}
                                     placeholder='Bathrooms'
                                     required
                                 />
@@ -148,6 +177,7 @@ const AddRoomForm = () => {
                             </label>
 
                             <textarea
+                                {...register('description')}
                                 id='description'
                                 className='block rounded-md focus:rose-300 w-full h-32 px-4 py-3 text-gray-800  border border-rose-300 focus:outline-rose-500 '
                                 name='description'
