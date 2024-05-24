@@ -5,15 +5,13 @@ import { useForm } from "react-hook-form";
 
 
 const AddRoomForm = ({ setDates, dates, handleFormSubmit }) => {
-    const { register, handleSubmit } = useForm()
-    const [imagePreview, setImagePreview] = useState()
-    function handleImagePreview(file) {
-        console.log(file);
-        // const imageUrl = URL.createObjectURL(file)
-    }
+    const { register, handleSubmit, } = useForm()
+    const [imagePreview, setImagePreview] = useState(null);
 
-    function consoleLog(e) {
-        console.log(e.target);
+    function handleImageChange(e) {
+        const file = e.target.files[0]
+        const imageUrl = URL.createObjectURL(file)
+        setImagePreview(imageUrl);
     }
 
     return (
@@ -26,6 +24,7 @@ const AddRoomForm = ({ setDates, dates, handleFormSubmit }) => {
                                 Location
                             </label>
                             <input
+                                // onChange={handleOnChange}
                                 className='w-full px-4 py-3 text-gray-800 border border-rose-300 focus:outline-rose-500 rounded-md '
                                 name='location'
                                 id='location'
@@ -53,7 +52,7 @@ const AddRoomForm = ({ setDates, dates, handleFormSubmit }) => {
                                 ))}
                             </select>
                         </div>
-
+                        {/* Calender */}
                         <div className='space-y-1'>
                             <label htmlFor='location' className='block text-gray-600'>
                                 Select Availability Range
@@ -84,16 +83,15 @@ const AddRoomForm = ({ setDates, dates, handleFormSubmit }) => {
                                 required
                             />
                         </div>
-
+                        {/* image */}
                         <div className=' p-4 bg-white w-full  m-auto rounded-lg grid grid-cols-2'>
-                            <div className='file_upload px-5 py-3 relative border-4 border-dotted border-gray-300 rounded-lg h-max'>
-                                <div className='flex flex-col w-max mx-auto text-center'>
+                            <div className='file_upload relative rounded-lg h-max m-auto'>
+                                <div className='flex flex-col w-max mx-auto text-center '>
                                     <label>
                                         <input
-                                            onChange={(e) => handleImagePreview(e.target.files[0])}
                                             className='text-sm cursor-pointer w-36 hidden'
                                             type='file'
-                                            {...register('image')}
+                                            {...register('image', { onChange: handleImageChange }, { required: true },)}
                                             name='image'
                                             id='image'
                                             accept='image/*'
@@ -105,8 +103,12 @@ const AddRoomForm = ({ setDates, dates, handleFormSubmit }) => {
                                     </label>
                                 </div>
                             </div>
-
+                            {/* imagge preview */}
+                            <div className='max-w-48 '>
+                                {imagePreview && <img src={imagePreview} className='rounded-lg' />}
+                            </div>
                         </div>
+
                         <div className='flex justify-between gap-2'>
                             <div className='space-y-1 text-sm'>
                                 <label htmlFor='price' className='block text-gray-600'>

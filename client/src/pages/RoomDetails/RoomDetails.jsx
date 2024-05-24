@@ -2,6 +2,8 @@ import Container from '../../components/Shared/Container'
 import { Helmet } from 'react-helmet-async'
 import RoomReservation from '../../components/RoomDetails/RoomReservation'
 import Heading from '../../components/Shared/Heading'
+import { useQuery } from '@tanstack/react-query'
+import axiosInstance from '../../hooks/axiosInstance'
 
 // single room object (Fake Data)
 const room = {
@@ -24,7 +26,15 @@ const room = {
     'Seamlessly evisculate frictionless e-markets through tactical interfaces. Holisticly visualize viral potentialities without mission-critical services.',
   image: 'https://i.ibb.co/BsLQWH6/992ceffe-86d2-42b0-93b8-c24427806cca.webp',
 }
+
 const RoomDetails = () => {
+  const { data, isPending, error } = useQuery({
+    queryKey: ['room-detail'],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get(`/rooms/detail/${id}`)
+    }
+  })
+
   return (
     <Container>
       <Helmet>

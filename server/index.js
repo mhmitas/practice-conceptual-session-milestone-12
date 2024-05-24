@@ -52,6 +52,7 @@ const roomColl = database.collection('rooms')
 async function run() {
   try {
     // UI related APIs
+    // get rooms from db
     app.get('/rooms', async (req, res) => {
       const category = req.query.category
       let query = {}
@@ -59,6 +60,19 @@ async function run() {
         query = { category: category }
       }
       const result = await roomColl.find(query).toArray()
+      res.send(result)
+    })
+
+    // get room detail
+    app.get('/rooms/detail/:id', async (req, res) => {
+      const id = req.params.id;
+      console.log(id)
+    })
+
+    // save a room in db
+    app.post('/rooms', async (req, res) => {
+      const roomData = req.body;
+      const result = await roomColl.insertOne(roomData)
       res.send(result)
     })
 
