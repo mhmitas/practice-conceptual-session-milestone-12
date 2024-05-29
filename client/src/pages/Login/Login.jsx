@@ -3,6 +3,7 @@ import { FcGoogle } from 'react-icons/fc'
 import useAuth from '../../hooks/useAuth'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
+import { saveUserInDb } from '../../api/utils/utils'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -14,12 +15,15 @@ const Login = () => {
   } = useForm()
 
   const onSubmit = async (userData) => {
-    console.log(userData);
     try {
       const { user } = await signIn(userData.email, userData.password)
       console.log(user);
+      //  save user in DB  
+      const res = await saveUserInDb(user)
+      console.log(res);
       navigate('/')
       toast.success('Sign up successfull')
+      setLoading(false)
     }
     catch (err) {
       console.error(err);
@@ -27,18 +31,21 @@ const Login = () => {
       setLoading(false)
     }
   }
-  function handleGoogleSignIn() {
-    signInWithGoogle()
-      .then(result => {
-        console.log(result.user);
-        navigate('/')
-        toast.success('Sign up successfull')
-      })
-      .catch(err => {
-        console.error(err);
-        toast.error(err.message)
-        setLoading(false)
-      })
+  async function handleGoogleSignIn() {
+    try {
+      const result = await signInWithGoogle()
+      // console.log(result.user);
+      const res = await saveUserInDb(result.user)
+      console.log(res);
+      navigate('/')
+      toast.success('Sign in successfull')
+      setLoading(false)
+    }
+    catch (err) {
+      console.error(err);
+      toast.error(err.message)
+      setLoading(false)
+    }
   }
 
   return (
@@ -91,15 +98,16 @@ const Login = () => {
 
           <div>
             <button
+              disabled={loading && true}
               type='submit'
-              className='bg-rose-500 w-full rounded-md py-3 text-white'
+              className='bg-rose-500 w-full rounded-md py-3 text-white disabled:cursor-wait active:scale-95 duration-500'
             >
               Continue
             </button>
           </div>
         </form>
         <div className='space-y-1'>
-          <button className='text-xs hover:underline hover:text-rose-500 text-gray-400'>
+          <button className='text-xs hover:underline hover:text-rose-500 text-gray-400 '>
             Forgot password?
           </button>
         </div>
@@ -118,7 +126,7 @@ const Login = () => {
           <p>Continue with Google</p>
         </button>
         <p className='px-6 text-sm text-center text-gray-400'>
-          Don&apos;t have an account yet?{' '}
+          Don't have an account yet?{' '}
           <Link
             to='/signup'
             className='hover:underline hover:text-rose-500 text-gray-600'

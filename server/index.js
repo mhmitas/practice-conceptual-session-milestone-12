@@ -48,6 +48,7 @@ const client = new MongoClient(uri, {
 
 const database = client.db('stay_vista')
 const roomColl = database.collection('rooms')
+const userColl = database.collection('users')
 
 async function run() {
   try {
@@ -71,13 +72,33 @@ async function run() {
       res.send(result)
     })
 
+    // save users in Database when they register in the app
+    app.put('/user', async (req, res) => {
+      const user = req.body
+      const query = { email: user?.email }
+      const isExists = await userColl.findOne(query)
+      if (isExists) {
+        if (user?.status === 'requested') {
+          const updateDoc = { $set: { status: user?.status } }
+          const result = await userColl.updateOne(query, updateDoc)
+          return res.send(result)
+        } else {
+          return res.send({ isExists })
+        }
+      }
+      // if new user save in db
+      const userDoc = { $set: { ...user, timestamp: Date.now() } }
+      const options = { upsert: true }
+      const result = await userColl.updateOne(query, userDoc, options)
+      res.send(result)
+    })
+
     // host related and accessible by host APIs
     // get all rooms added by host
     app.get('/rooms/:email', async (req, res) => {
       const email = req.params.email
       const query = { 'host.email': email }
-      const result = await roomColl.find(query).toArray()
-      console.log(result)
+      const result = await roomColl.find(query).toArray();
       res.send(result)
     })
 
@@ -85,6 +106,14 @@ async function run() {
     app.post('/rooms', async (req, res) => {
       const roomData = req.body;
       const result = await roomColl.insertOne(roomData)
+      res.send(result)
+    })
+
+    // delete room by the host
+    app.delete('/room/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: new ObjectId(id) }
+      const result = await roomColl.deleteOne(query)
       res.send(result)
     })
 

@@ -3,6 +3,7 @@ import useAuth from '../../../../hooks/useAuth'
 import { useQuery } from '@tanstack/react-query'
 import useAxiosSecure from '../../../../hooks/useAxiosSecure'
 import RoomDataRow from '../../../../components/table-rows/RoomsListRow'
+import askConfirm from '../../../../components/modals/askConfirm'
 
 const MyListings = () => {
     const axiosSecure = useAxiosSecure()
@@ -20,8 +21,18 @@ const MyListings = () => {
         return <h3>Loading...</h3>
     }
 
-    function handleDelete(id) {
-        console.log(id, 'delete koro ');
+    async function handleDelete(id) {
+        const ask = await askConfirm(<span>
+            <span className='text-2xl inline-block'>Are you sure? You want to delete this room.</span><br />
+            <span className='text-rose-600 mt-1 inline-block'>You cannot revert it!</span>
+        </span>)
+        if (!ask) { return }
+        try {
+            const result = await axiosSecure.delete(`/room/${id}`)
+            refetch()
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     return (

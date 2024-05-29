@@ -15,7 +15,7 @@
 
 ## Working in my listing page:
 => show all posted room by host: in my listing page ✓
-=> add functionality: delete and update room(call api using useMutation) , and before delete and update ask confirmation and use headless modal .
+=> add functionality: delete ✓ | and update room(call api using useMutation) , and before delete and update ask confirmation and use headless modal .
 => room detail page valid date info showing.(from session 2.4 32:15[show data in range calaender])✓
 => ekhon ami start date and end date er middle er difference dekhte chia. so i will use 'Date-fns'[differenceInCalendarDays] and show total price.✓
 => now i will save users data in DB: create a saveuserindb() and use it in signin and sign up function

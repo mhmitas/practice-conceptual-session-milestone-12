@@ -1,4 +1,5 @@
 import axios, { } from "axios";
+import axiosInstance from "../../hooks/axiosInstance";
 
 // in this file i will take the actual image file
 async function imageUpload(image) {
@@ -8,4 +9,20 @@ async function imageUpload(image) {
     return data.data.display_url
 }
 
-export { imageUpload }
+
+////////////////////////
+//  save user in DB   //
+async function saveUserInDb(user) {
+    const userInfo = {
+        name: user?.displayName,
+        email: user?.email,
+        uid: user?.uid,
+        status: 'verified',
+        role: 'guest',
+    }
+    const res = await axiosInstance.put('/user', userInfo)
+    return res
+}
+
+
+export { imageUpload, saveUserInDb }

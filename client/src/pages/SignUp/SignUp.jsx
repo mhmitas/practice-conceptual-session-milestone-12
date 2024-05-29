@@ -5,6 +5,7 @@ import axios from 'axios'
 import useAuth from '../../hooks/useAuth'
 import { ImSpinner2 } from "react-icons/im";
 import toast from 'react-hot-toast'
+import { saveUserInDb } from '../../api/utils/utils'
 
 const SignUp = () => {
   const navigate = useNavigate()
@@ -27,14 +28,15 @@ const SignUp = () => {
       if (userData.image[0]) {
         const { data } = await axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`, formData)
         imageUrl = data.data?.display_url;
-        console.log(imageUrl);
       }
       // Sign up using email and password;
       const result = await createUser(userData.email, userData.password)
-      console.log(result.user);
+      // console.log(result.user);
       // update user profile
       await updateUserProfile(userData.name, imageUrl)
       navigate('/')
+      //  save user in DB  
+      await saveUserInDb(result.user)
       toast.success('Sign up successfull')
     }
     catch (err) {
@@ -44,18 +46,19 @@ const SignUp = () => {
     }
   }
 
-  function handleGoogleSignIn() {
-    signInWithGoogle()
-      .then(result => {
-        console.log(result.user);
-        navigate('/')
-        toast.success('Sign up successfull')
-      })
-      .catch(err => {
-        console.error(err);
-        toast.error(err.message)
-        setLoading(false)
-      })
+  async function handleGoogleSignIn() {
+    try {
+      const result = await signInWithGoogle()
+      // console.log(result.user);
+      await saveUserInDb(result.user)
+      navigate('/')
+      toast.success('Sign up successfull')
+    }
+    catch (err) {
+      console.error(err);
+      toast.error(err.message)
+      setLoading(false)
+    }
   }
 
 
