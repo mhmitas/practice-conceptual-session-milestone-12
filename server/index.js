@@ -66,7 +66,19 @@ async function run() {
     // get room detail
     app.get('/rooms/detail/:id', async (req, res) => {
       const id = req.params.id;
-      console.log(id)
+      const query = { _id: new ObjectId(id) }
+      const result = await roomColl.findOne(query)
+      res.send(result)
+    })
+
+    // host related and accessible by host APIs
+    // get all rooms added by host
+    app.get('/rooms/:email', async (req, res) => {
+      const email = req.params.email
+      const query = { 'host.email': email }
+      const result = await roomColl.find(query).toArray()
+      console.log(result)
+      res.send(result)
     })
 
     // save a room in db
@@ -106,6 +118,8 @@ async function run() {
         res.status(500).send(err)
       }
     })
+
+
 
     // Send a ping to confirm a successful connection
     await client.db('admin').command({ ping: 1 })

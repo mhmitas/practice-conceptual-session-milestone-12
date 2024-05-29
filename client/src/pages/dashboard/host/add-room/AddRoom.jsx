@@ -4,9 +4,12 @@ import { imageUpload } from '../../../../api/utils/utils';
 import useAuth from '../../../../hooks/useAuth';
 import { useMutation } from "@tanstack/react-query";
 import axiosInstance from '../../../../hooks/axiosInstance';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const AddRoom = () => {
     const { user } = useAuth()
+    const navigate = useNavigate()
 
     const [dates, setDates] = useState([
         {
@@ -21,9 +24,13 @@ const AddRoom = () => {
             const result = await axiosInstance.post('/rooms', roomData)
             return result
         },
+        onSuccess: () => {
+            toast.success('Room Added Successfully 😊')
+            navigate('/dashboard/my-listings')
+        }
     })
 
-    async function handleFormSubmit(roomData) {
+    async function handleFormSubmit(roomData, event) {
         // console.table(roomData)
         if (roomData.image[0]) {
             const imageFile = roomData.image[0]
@@ -41,10 +48,10 @@ const AddRoom = () => {
         const to = dates[0].endDate
         try {
             const postData = { ...roomData, from, to, host }
-            console.table(postData)
+            // console.table(postData)
             const result = await mutateAsync(postData)
-            console.log(result);
-
+            console.log(result.data);
+            event.target.reset()
         } catch (err) {
             console.error(err);
         }

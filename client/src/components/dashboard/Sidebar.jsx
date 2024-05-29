@@ -82,6 +82,7 @@ const Sidebar = () => {
 
                                 <span className='mx-4 font-medium'>Statistics</span>
                             </NavLink>
+
                             {/* Add Room */}
                             <NavLink
                                 to='add-room'
