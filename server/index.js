@@ -123,6 +123,14 @@ async function run() {
       res.send(result)
     })
 
+    // get a user by email for checking user role
+    app.get('/user/:email', async (req, res) => {
+      const email = req.params.email
+      const query = { email: email }
+      const result = await userColl.findOne(query)
+      res.send(result)
+    })
+
     //-----------------------------------------
     // auth related api
     app.post('/jwt', async (req, res) => {

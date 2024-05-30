@@ -29,7 +29,7 @@
 // Conceptual Sessions Part 3 // ✓
 ////////////////////////////////
 [v-1]
-=> First Users er role gulo fix kore dibo
+=> First User er role gulo fix kore dibo
  - create a hook, which will fetch user. so that i can use this hook from anywhere and get the users role.
  - before useing role for connditional rendaring: create a component for navlinks and reuse this component for navlinks && work in profile page [Home task: work with update password and change password ]
 [v-2]
