@@ -1,25 +1,29 @@
 import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import useAxiosSecure from '../../../hooks/useAxiosSecure'
+import UserDataRow from '../../../components/table-rows/UsersTableRow'
+import Heading from '../../../components/Shared/Heading'
 
 const ManageUsers = () => {
     const axiosSecure = useAxiosSecure()
 
-    const { data: users } = useQuery({
+    const { data: users, isLoading, refetch } = useQuery({
         queryKey: ['manage-users'],
         queryFn: async () => {
-            const { data } = axiosSecure.get('/users')
-            console.log(data);
+            const { data } = await axiosSecure.get('/users')
             return data
         }
     })
 
+    if (isLoading) {
+        return <span>Loading...</span>
+    }
+
     return (
         <>
             <div className='container mx-auto px-4 sm:px-8'>
-                <Helmet>
-                    <title>Manage Users</title>
-                </Helmet>
+                <Heading title={'Manage Users'} center={true} />
+                {/* <button onClick={() => setShowModal(true)} className='bg-blue-500 p-4'>modal</button> */}
                 <div className='py-8'>
                     <div className='-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto'>
                         <div className='inline-block min-w-full shadow rounded-lg overflow-hidden'>
@@ -55,13 +59,18 @@ const ManageUsers = () => {
                                 </thead>
                                 <tbody>
                                     {/* User data table row */}
-
+                                    {
+                                        users.map(user => <UserDataRow user={user} key={user._id} refetch={refetch} />)
+                                    }
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
+            <Helmet>
+                <title>Manage Users</title>
+            </Helmet>
         </>
     )
 }

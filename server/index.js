@@ -99,6 +99,7 @@ async function run() {
       res.send(result)
     })
 
+
     // host related and accessible by host APIs
     // get all rooms added by host
     app.get('/rooms/:email', async (req, res) => {
@@ -122,6 +123,19 @@ async function run() {
       const result = await roomColl.deleteOne(query)
       res.send(result)
     })
+
+
+    // Admin related APIs
+    // update user role
+    app.patch('/user/update-role/:email', async (req, res) => {
+      const email = req.params.email;
+      const user = req.body;
+      const query = { email: email }
+      const updateDoc = { $set: { ...user, timestamp: Date.now() } }
+      const result = await userColl.updateOne(query, updateDoc)
+      res.send(result)
+    })
+
 
     // get a user by email for checking user role
     app.get('/user/:email', async (req, res) => {
