@@ -72,6 +72,7 @@ async function run() {
       res.send(result)
     })
 
+    // users related APIs
     // save users in Database when they register in the app
     app.put('/user', async (req, res) => {
       const user = req.body
@@ -90,6 +91,11 @@ async function run() {
       const userDoc = { $set: { ...user, timestamp: Date.now() } }
       const options = { upsert: true }
       const result = await userColl.updateOne(query, userDoc, options)
+      res.send(result)
+    })
+
+    app.get('/users', async (req, res) => {
+      const result = await userColl.find().toArray()
       res.send(result)
     })
 
