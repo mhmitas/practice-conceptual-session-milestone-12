@@ -84,7 +84,7 @@ const Login = () => {
                 </label>
               </div>
               <input
-                type='password'
+                type='text'
                 {...register("password")}
                 name='password'
                 autoComplete='current-password'

@@ -39,13 +39,13 @@ const RoomReservation = ({ room }) => {
         />
       </div>
       <hr />
-      <div className='p-4'>
-        <Button label={'Reserve'} />
-      </div>
-      <hr />
       <div className='p-4 flex items-center justify-between font-semibold text-lg'>
         <div>Total</div>
-        <div>{totalDays} x {totalPrice} = ${totalPrice}</div>
+        <div> ${totalPrice}</div>
+      </div>
+      <hr />
+      <div className='p-4'>
+        <Button label={'Reserve'} />
       </div>
     </div>
   )

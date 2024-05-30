@@ -6,10 +6,12 @@ import { useMutation } from "@tanstack/react-query";
 import axiosInstance from '../../../../hooks/axiosInstance';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 
 const AddRoom = () => {
     const { user } = useAuth()
     const navigate = useNavigate()
+    const axiosSecure = useAxiosSecure()
 
     const [dates, setDates] = useState([
         {
@@ -21,7 +23,7 @@ const AddRoom = () => {
 
     const { mutateAsync } = useMutation({
         mutationFn: async (roomData) => {
-            const result = await axiosInstance.post('/rooms', roomData)
+            const result = await axiosSecure.post('/rooms', roomData)
             return result
         },
         onSuccess: () => {

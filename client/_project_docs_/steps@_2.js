@@ -34,12 +34,12 @@
  - before using role for conditional rendering: create a component for nav-links and reuse this component for nav-links ✓ && work in profile page [Home task: work with update password and change password ]
 [v-2]
 => user role: conditional rendering based on users role: show menu items based on role ✓
-=> work in admin route: create a manage users page and show all users -->...[v-3]...create an api for update user role and when click on update role button show a modal with checklist, and when click update btn, update user role in database 
-[v-3]--> add some validation
-=> implement toggle between ( guest <--> host ): ...[v-4]...  
-=> now i will secure all routes in client side which needed to be secure . wrapping them in privet + admin + host routes
-=> Next i will secure some routes from client side, so that those who is allow to access the route/api only he can access it: create a verifyAdmin middleware in server -> create an verifyHost middleware
-=> now i will make functional become a host button which is in the guest's dashboard.: 
+=> work in admin route: create a manage users page and show all users -->...[v-3]...create an api for update user role and when click on update role button show a modal with checklist, and when click update btn, update user role in database ✓  [v-3]--> add some validation. 
+=> implement toggle between ( guest <--> host ): 
+...[v-4]...  
+=> now i will secure all routes in client side which needed to be secure . wrapping them in privet + admin + host routes. ✓
+=> Next i will secure some routes from server side, so that those who is allow to access the route/api only he can access it: create a verifyAdmin middleware in server -> create an verifyHost middleware ✓
+=> now i will make functional become a host button which is in the guest's dashboard. ✓
 => now i will work with room booking: create modal with booking information. reserve will do next day.
 => Next work in my-bookings page: create my-bookings page, copy paste code form resources -> setup a route ->   
 

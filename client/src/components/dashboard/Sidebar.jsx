@@ -11,13 +11,21 @@ import GuestMenu from '../menu/GuestMenu'
 import HostMenu from '../menu/HostMenu'
 import AdminMenu from '../menu/AdminMenu'
 import useRole from '../../hooks/useRole'
+import ToggleBtn from '../toggle-btn/ToggleButton'
+import { BsGraphUp } from 'react-icons/bs'
 
 const Sidebar = () => {
     const { logOut } = useAuth()
-    const [isActive, setActive] = useState(false)
+    const [isActive, setActive] = useState(false);
+    const [toggle, setToggle] = useState(false);
 
     const [role] = useRole()
     console.log(role);
+
+    function toggleHandler(e) {
+        // setToggle(!toggle)
+        setToggle(e.target.checked)
+    }
 
     // Sidebar Responsive Handler
     const handleToggle = () => {
@@ -72,13 +80,32 @@ const Sidebar = () => {
                     {/* Nav Items */}
                     <div className='flex flex-col justify-between flex-1 mt-6'>
                         {/* Conditional toggle button here.. */}
-
+                        {role === 'host' && <ToggleBtn toggleHandler={toggleHandler} />}
                         {/*  Menu Items */}
                         <nav>
+                            <NavLink
+                                to='statistics'
+                                className={({ isActive }) =>
+                                    `flex items-center px-4 py-2 my-5  transition-colors duration-300 transform  hover:bg-gray-300   hover:text-gray-700 ${isActive ? 'bg-gray-300  text-gray-700' : 'text-gray-600'
+                                    }`
+                                }
+                            >
+                                <BsGraphUp className='w-5 h-5' />
+
+                                <span className='mx-4 font-medium'>Statistics</span>
+                            </NavLink>
                             {role === "guest" && <GuestMenu />}
-                            {role === "host" && <HostMenu />}
-                            {/* {role === "admin" && <AdminMenu />} */}
-                            <AdminMenu />
+                            {
+                                role === "host" ?
+                                    toggle ?
+                                        <GuestMenu />
+                                        :
+                                        <HostMenu />
+                                    :
+                                    undefined
+                            }
+                            {role === "admin" && <AdminMenu />}
+                            {/* <AdminMenu /> */}
                         </nav>
                     </div>
                 </div>

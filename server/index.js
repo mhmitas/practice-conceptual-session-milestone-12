@@ -22,7 +22,7 @@ app.use(cookieParser())
 // Verify Token Middleware
 const verifyToken = async (req, res, next) => {
   const token = req.cookies?.token
-  console.log(token)
+  // console.log(token)
   if (!token) {
     return res.status(401).send({ message: 'unauthorized access' })
   }
@@ -52,6 +52,29 @@ const userColl = database.collection('users')
 
 async function run() {
   try {
+    // verify admin middleware
+    async function verifyAdmin(req, res, next) {
+      const user = req.user
+      const query = { email: user?.email }
+      const result = await userColl.findOne(query)
+      if (!result || result?.role !== 'admin') {
+        return res.status(401).send({ message: 'unauthorized access' })
+      }
+      next()
+    }
+
+    // verify Host middleware
+    async function verifyHost(req, res, next) {
+      const user = req.user
+      const query = { email: user?.email }
+      const result = await userColl.findOne(query)
+      if (!result || result?.role !== 'host') {
+        return res.status(401).send({ message: 'unauthorized access' })
+      }
+      next()
+    }
+
+
     // UI related APIs
     // get rooms from db
     app.get('/rooms', async (req, res) => {
@@ -94,15 +117,10 @@ async function run() {
       res.send(result)
     })
 
-    app.get('/users', async (req, res) => {
-      const result = await userColl.find().toArray()
-      res.send(result)
-    })
-
 
     // host related and accessible by host APIs
     // get all rooms added by host
-    app.get('/rooms/:email', async (req, res) => {
+    app.get('/rooms/:email', verifyAdmin, verifyHost, async (req, res) => {
       const email = req.params.email
       const query = { 'host.email': email }
       const result = await roomColl.find(query).toArray();
@@ -110,14 +128,14 @@ async function run() {
     })
 
     // save a room in db
-    app.post('/rooms', async (req, res) => {
+    app.post('/rooms', verifyAdmin, verifyHost, async (req, res) => {
       const roomData = req.body;
       const result = await roomColl.insertOne(roomData)
       res.send(result)
     })
 
     // delete room by the host
-    app.delete('/room/:id', async (req, res) => {
+    app.delete('/room/:id', verifyAdmin, verifyHost, async (req, res) => {
       const id = req.params.id
       const query = { _id: new ObjectId(id) }
       const result = await roomColl.deleteOne(query)
@@ -127,12 +145,17 @@ async function run() {
 
     // Admin related APIs
     // update user role
-    app.patch('/user/update-role/:email', async (req, res) => {
+    app.patch('/user/update-role/:email', verifyToken, verifyAdmin, async (req, res) => {
       const email = req.params.email;
       const user = req.body;
       const query = { email: email }
       const updateDoc = { $set: { ...user, timestamp: Date.now() } }
       const result = await userColl.updateOne(query, updateDoc)
+      res.send(result)
+    })
+
+    app.get('/users', verifyToken, verifyAdmin, async (req, res) => {
+      const result = await userColl.find().toArray()
       res.send(result)
     })
 
@@ -144,6 +167,7 @@ async function run() {
       const result = await userColl.findOne(query)
       res.send(result)
     })
+
 
     //-----------------------------------------
     // auth related api
