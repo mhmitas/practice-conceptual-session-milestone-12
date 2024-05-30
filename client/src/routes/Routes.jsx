@@ -9,6 +9,7 @@ import DashBoard from './DashBoard'
 import AddRoom from '../pages/dashboard/host/add-room/AddRoom'
 import PrivateRoute from './PrivateRoute'
 import MyListings from '../pages/dashboard/host/my-listing/MyListings'
+import ManageUsers from '../pages/dashboard/admin/ManageUsers'
 
 export const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ export const router = createBrowserRouter([
     path: '/dashboard',
     element: <PrivateRoute><DashBoard /></PrivateRoute>,
     children: [
+      // host related routes
       {
         path: 'add-room',
         element: <AddRoom />
@@ -40,6 +42,12 @@ export const router = createBrowserRouter([
         path: 'my-listings',
         element: <MyListings />
       },
+      // Admin related routes
+      {
+        path: 'manage-users',
+        element: <ManageUsers />
+      },
+
     ]
   }
 ])
