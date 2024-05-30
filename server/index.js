@@ -120,7 +120,7 @@ async function run() {
 
     // host related and accessible by host APIs
     // get all rooms added by host
-    app.get('/rooms/:email', verifyAdmin, verifyHost, async (req, res) => {
+    app.get('/rooms/:email', verifyToken, verifyHost, async (req, res) => {
       const email = req.params.email
       const query = { 'host.email': email }
       const result = await roomColl.find(query).toArray();
@@ -128,14 +128,14 @@ async function run() {
     })
 
     // save a room in db
-    app.post('/rooms', verifyAdmin, verifyHost, async (req, res) => {
+    app.post('/rooms', verifyToken, verifyHost, async (req, res) => {
       const roomData = req.body;
       const result = await roomColl.insertOne(roomData)
       res.send(result)
     })
 
     // delete room by the host
-    app.delete('/room/:id', verifyAdmin, verifyHost, async (req, res) => {
+    app.delete('/room/:id', verifyToken, verifyHost, async (req, res) => {
       const id = req.params.id
       const query = { _id: new ObjectId(id) }
       const result = await roomColl.deleteOne(query)

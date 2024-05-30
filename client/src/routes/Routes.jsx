@@ -12,6 +12,7 @@ import MyListings from '../pages/dashboard/host/my-listing/MyListings'
 import ManageUsers from '../pages/dashboard/admin/ManageUsers'
 import HostRoutes from './HostRoutes'
 import AdminRoutes from './AdminRoutes'
+import MyBookings from '../pages/dashboard/guest/MyBookings'
 
 export const router = createBrowserRouter([
   {
@@ -35,6 +36,13 @@ export const router = createBrowserRouter([
     path: '/dashboard',
     element: <PrivateRoute><DashBoard /></PrivateRoute>,
     children: [
+      // guest related routes
+      {
+        path: 'my-bookings',
+        element: <PrivateRoute>
+          <MyBookings />
+        </PrivateRoute>
+      },
       // host related routes
       {
         path: 'add-room',

@@ -3,6 +3,7 @@ import Button from '../Shared/Button/Button'
 import { DateRange } from 'react-date-range';
 import { useState } from 'react';
 import { differenceInCalendarDays } from 'date-fns';
+import RoomBookingModal from '../modals/RoomBookingModal';
 
 const RoomReservation = ({ room }) => {
   // console.log(new Date(room.from.toLocaleString()));
@@ -14,13 +15,19 @@ const RoomReservation = ({ room }) => {
       key: 'selection'
     }
   ]);
+  const [showModal, setShowModal] = useState(false)
 
   const totalDays = differenceInCalendarDays(
     new Date(room.to),
     new Date(room.from),
   )
   const totalPrice = Number(room.price) * totalDays
-  console.log(totalPrice);
+  // console.log('totalPrice');
+
+  function modalHandler() {
+    setShowModal(false)
+    console.log(`'Book a room`);
+  }
 
   return (
     <div className='rounded-xl border-[1px] border-neutral-200 overflow-hidden bg-white'>
@@ -45,8 +52,9 @@ const RoomReservation = ({ room }) => {
       </div>
       <hr />
       <div className='p-4'>
-        <Button label={'Reserve'} />
+        <Button onClick={() => setShowModal(true)} label={'Reserve'} />
       </div>
+      {showModal && <RoomBookingModal bookingInfo={{ ...room }} setShowModal={setShowModal} modalHandler={modalHandler} />}
     </div>
   )
 }

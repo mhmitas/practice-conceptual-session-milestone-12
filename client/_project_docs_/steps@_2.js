@@ -40,7 +40,7 @@
 => now i will secure all routes in client side which needed to be secure . wrapping them in privet + admin + host routes. ✓
 => Next i will secure some routes from server side, so that those who is allow to access the route/api only he can access it: create a verifyAdmin middleware in server -> create an verifyHost middleware ✓
 => now i will make functional become a host button which is in the guest's dashboard. ✓
-=> now i will work with room booking: create modal with booking information. reserve will do next day.
+=> now i will work with room booking: create modal with booking information. reserve will do next day. ✓
 => Next work in my-bookings page: create my-bookings page, copy paste code form resources -> setup a route ->   
 
 
