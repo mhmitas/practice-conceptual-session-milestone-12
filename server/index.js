@@ -5,6 +5,7 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 const jwt = require('jsonwebtoken')
+const stripe = require('stripe')(process.env.STRIPE_SK)
 
 const port = process.env.PORT || 8000
 
@@ -49,6 +50,7 @@ const client = new MongoClient(uri, {
 const database = client.db('stay_vista')
 const roomColl = database.collection('rooms')
 const userColl = database.collection('users')
+const bookingColl = database.collection('bookings')
 
 async function run() {
   try {
@@ -117,6 +119,14 @@ async function run() {
       res.send(result)
     })
 
+    // get a user by email for checking user role
+    app.get('/user/:email', async (req, res) => {
+      const email = req.params.email
+      const query = { email: email }
+      const result = await userColl.findOne(query)
+      res.send(result)
+    })
+
 
     // host related and accessible by host APIs
     // get all rooms added by host
@@ -160,16 +170,31 @@ async function run() {
     })
 
 
-    // get a user by email for checking user role
-    app.get('/user/:email', async (req, res) => {
-      const email = req.params.email
-      const query = { email: email }
-      const result = await userColl.findOne(query)
+    // save booking data in database
+    app.post('/bookings', async (req, res) => {
+      const bookingData = req.body
+      const updateDoc = { $set: bookingData }
+      const result = await bookingColl.insertOne(updateDoc)
       res.send(result)
     })
 
 
-    //-----------------------------------------
+    // stripe api
+    app.post('/create-payment-intent', async (req, res) => {
+      const price = parseFloat(req.body.price) * 100
+      if (price < 1) { return }
+      // create payment intent with the order amount and currency
+      const { client_secret } = await stripe.paymentIntents.create({
+        amount: price,
+        currency: 'usd',
+        automatic_payment_methods: {
+          enabled: true,
+        },
+      });
+      res.send({ clientSecret: client_secret })
+    })
+
+
     // auth related api
     app.post('/jwt', async (req, res) => {
       const user = req.body
@@ -199,7 +224,6 @@ async function run() {
         res.status(500).send(err)
       }
     })
-
 
 
     // Send a ping to confirm a successful connection

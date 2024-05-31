@@ -1,7 +1,13 @@
 import React from 'react';
 import { format } from 'date-fns'
+import { Elements } from '@stripe/react-stripe-js';
+import CheckoutForm from '../forms/CheckoutForm';
+import { loadStripe } from '@stripe/stripe-js';
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK)
 
-const RoomBookingModal = ({ bookingInfo, setShowModal, modalHandler }) => {
+const RoomBookingModal = ({ bookingInfo, setShowModal }) => {
+    // console.log(bookingInfo);
+
     return (
         <div>
             <div
@@ -14,6 +20,11 @@ const RoomBookingModal = ({ bookingInfo, setShowModal, modalHandler }) => {
                         <div className='mt-2'>
                             <p className='text-sm text-gray-700'>
                                 Room: {bookingInfo.title}
+                            </p>
+                        </div>
+                        <div className='mt-2'>
+                            <p className='text-sm text-gray-700'>
+                                Host: {bookingInfo.host?.name}
                             </p>
                         </div>
                         <div className='mt-2'>
@@ -39,14 +50,11 @@ const RoomBookingModal = ({ bookingInfo, setShowModal, modalHandler }) => {
                             </p>
                         </div>
                     </div>
-                    <div className="flex justify-center space-x-4 mt-8">
-                        <button onClick={modalHandler} className="bg-blue-500 text-white font-bold py-2 px-4 rounded transition-transform transform hover:bg-blue-600 active:scale-95" >
-                            Book
-                        </button>
-                        <button onClick={() => setShowModal(false)} className="bg-rose-500 text-white font-bold py-2 px-4 rounded transition-transform transform hover:bg-rose-600 active:scale-95" >
-                            Cancel
-                        </button>
-                    </div>
+                    {/* checkout form */}
+                    <Elements stripe={stripePromise}>
+                        <CheckoutForm setShowModal={setShowModal} bookingInfo={bookingInfo} />
+                    </Elements>
+
                 </div>
             </div>
         </div>

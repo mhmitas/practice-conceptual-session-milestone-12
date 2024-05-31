@@ -44,6 +44,14 @@
 => Next work in my-bookings page: create my-bookings page, copy paste code form resources -> setup a route ->   
 
 
+////////////////////////////////
+// Conceptual Sessions Part 4 //
+////////////////////////////////
+[v-1]
+=> First i will deal with the payment method: create a card component following github repo of minimal example. --> when the card component will render i have to fetch a secret key from the server. create a api in server to generate client secret and send the clientSecret with response. --> use useEffect and fetch the clientSecret. and set it in a state --> create confirmCardPayment and ensure payment successful 
+=> after making payment successful i will save booking info in database and will update the room {booking: true}  
+[v-4]
+=> show all bookings in my bookings page of guest.
 
 
 

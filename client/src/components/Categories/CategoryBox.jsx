@@ -15,7 +15,7 @@ const CategoryBox = ({ label, icon: Icon }) => {
         category: label
       }
     })
-    console.log(query);
+    // console.log(query);
     navigate(query)
   }
 

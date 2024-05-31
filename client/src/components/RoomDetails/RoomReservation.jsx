@@ -54,7 +54,7 @@ const RoomReservation = ({ room }) => {
       <div className='p-4'>
         <Button onClick={() => setShowModal(true)} label={'Reserve'} />
       </div>
-      {showModal && <RoomBookingModal bookingInfo={{ ...room }} setShowModal={setShowModal} modalHandler={modalHandler} />}
+      {showModal && <RoomBookingModal bookingInfo={{ ...room, price: totalPrice }} setShowModal={setShowModal} modalHandler={modalHandler} />}
     </div>
   )
 }
